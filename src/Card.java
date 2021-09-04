@@ -1,4 +1,4 @@
-public class Card {
+ public class Card {
 	
 	enum allColors {
 		Red, Blue, Green, Yellow, Wild;
@@ -42,6 +42,8 @@ public class Card {
 		return String.valueOf(this.color) + " - "+ String.valueOf(this.value);
 	}
 	
+	
+	
 	//Checks if the card being played is valid.
 	public static boolean validMove(Card currentCard, Card topCard) {
 		if (currentCard.color == topCard.color || currentCard.value == topCard.value || currentCard.color.toString() == "Wild" || currentCard.color.toString() == "WildDrawFour") {
@@ -50,6 +52,7 @@ public class Card {
 			return false;
 		}
 	}
+	
 	
 	
 	
