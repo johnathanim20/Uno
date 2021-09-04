@@ -9,7 +9,6 @@ public class Player {
 	static Player currentPlayer;
 	static int currentPlayerIndex = 0;
 	static ArrayList<ArrayList<Card>> playerHands = new ArrayList<ArrayList<Card>> ();
-	//private static ArrayList<Card> individualHand = new ArrayList<Card> ();
 
 	static boolean drawStackedCards = false;
 	static String currentColor;
@@ -82,6 +81,7 @@ public class Player {
 		for (int i = 0; i < GameState.getNumPlayers(); i++) {
 			players[i] = new Player();
 		}
+		currentPlayer = players[0];
 	}
 	
 	//Method to set the nextPlayer's turn and set currentPlayer to be the nextPlayer (does not account for special cards in it of itself)
@@ -104,8 +104,6 @@ public class Player {
 			currentPlayer.setTurn(true);
 		}	
 	}
-	
-	
 	
 	public static void reverseCard() {
 		clockwise = !clockwise;
@@ -158,6 +156,7 @@ public class Player {
 	
 	public static void cardHandler(Card card) {
 		String value = Card.getValue(card).toString();
+		//String color = Card.getColor(card).toString();
 		if (value == "Wild") {
 			wildCard();
 			drawStackedCards = false;
@@ -181,8 +180,7 @@ public class Player {
 			wildDrawFourCard();
 			wildDrawFourCard();
 			drawStackedCards = false;
-		}
-		else {
+		} else {
 			drawStackedCards = false;
 		}
 	}
@@ -191,31 +189,28 @@ public class Player {
 		//if player has a playable card, add to pile, subtract from hand
 			for (int j = 0; j < playerHands.get(currentPlayerIndex).size(); j++) {
 				if (Card.validMove(playerHands.get(currentPlayerIndex).get(j), Deck.getTopCardDiscardPile())) {
-					playerHands.get(currentPlayerIndex).remove(playerHands.get(currentPlayerIndex).get(j));
 					Deck.addToDiscardPile(playerHands.get(currentPlayerIndex).get(j));
 					cardHandler(playerHands.get(currentPlayerIndex).get(j));
+					playerHands.get(currentPlayerIndex).remove(playerHands.get(currentPlayerIndex).get(j));
 					currentPlayer.setTurn(false);
 					setNextPlayer();
 					setCurrentColor(Card.getColor(playerHands.get(currentPlayerIndex).get(j)).toString());
-					break;
-				} else {
-					//otherwise draw from deck and play if possible... if not, no card will be played
-					Card draw1 = Deck.getTopCardPlayingDeck();
-					playerHands.get(currentPlayerIndex).add(draw1);
-					if (Card.validMove(Deck.getTopCardDiscardPile(), draw1)) {
-						playerHands.get(currentPlayerIndex).remove(draw1);
-						Deck.addToDiscardPile(draw1);
-						cardHandler(Deck.getTopCardDiscardPile());
-						currentPlayer.setTurn(false);
-						setNextPlayer();
-						setCurrentColor(Card.getColor(playerHands.get(currentPlayerIndex).get(j)).toString());						
-						break;
-					}
+					return;
 				}
-			currentPlayer.setTurn(false);
-			setNextPlayer();
 			}
-		}
+			//otherwise draw from deck and play if possible... if not, no card will be played
+			Card draw1 = Deck.getTopCardPlayingDeck();
+			playerHands.get(currentPlayerIndex).add(draw1);
+			if (Card.validMove(Deck.getTopCardDiscardPile(), draw1)) {
+				playerHands.get(currentPlayerIndex).remove(draw1);
+				Deck.addToDiscardPile(draw1);
+				cardHandler(Deck.getTopCardDiscardPile());
+				currentPlayer.setTurn(false);
+				setNextPlayer();
+				setCurrentColor(Card.getColor(draw1).toString());						
+				return;
+			}
+	}
 	
 }
  

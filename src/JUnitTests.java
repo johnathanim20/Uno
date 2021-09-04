@@ -11,6 +11,7 @@ public class JUnitTests {
 	@Test
 	void testNumberFillDeck() {
 		Deck deck = new Deck();
+		Deck.initializeDeck();
 		assertEquals(108, Deck.getInitialDeck().size());
 	}
 	
@@ -29,6 +30,7 @@ public class JUnitTests {
 	@Test 
 	void testNumberShuffle() {
 		Deck deck = new Deck();
+		Deck.initializeDeck();
 		Deck.shuffleDeck(Deck.getInitialDeck());
 		assertEquals(108, Deck.getPlayingDeck().size());
 	}
@@ -37,6 +39,7 @@ public class JUnitTests {
 	@Test
 	void testInitializeHand() {
 		Deck deck = new Deck();
+		Deck.initializeDeck();
 		Deck.shuffleDeck(Deck.getInitialDeck());
 		GameState.inputNumPlayers();
 		Player player = new Player();
@@ -52,6 +55,7 @@ public class JUnitTests {
 	@Test
 	void testSetNextPlayer() {
 		Deck deck = new Deck();
+		Deck.initializeDeck();
 		Deck.shuffleDeck(Deck.getInitialDeck());
 		GameState.inputNumPlayers();
 		Player player = new Player();
@@ -70,6 +74,7 @@ public class JUnitTests {
 	@Test
 	void testDrawTwoCard() {
 		Deck deck = new Deck();
+		Deck.initializeDeck();
 		Deck.shuffleDeck(Deck.getInitialDeck());
 		GameState.inputNumPlayers();
 		Player player = new Player();
@@ -89,6 +94,7 @@ public class JUnitTests {
 	@Test 
 	void testWildDrawFourCard() {
 		Deck deck = new Deck();
+		Deck.initializeDeck();
 		Deck.shuffleDeck(Deck.getInitialDeck());
 		GameState.inputNumPlayers();
 		Player player = new Player();
@@ -101,24 +107,37 @@ public class JUnitTests {
 	@Test
 	void testCardHandler() {
 		Deck deck = new Deck();
+		Deck.initializeDeck();
 		Deck.shuffleDeck(Deck.getInitialDeck());
 		GameState.inputNumPlayers();
 		Player player = new Player();
 		Player.initializeHand(GameState.getNumPlayers());
 		System.out.println(Deck.getPlayingDeck().size());
 		Player.buildPlayerArr();
-		//String input1 = "WildDrawFour";
-		//String input2 = "DrawTwo";
-		//System.out.println(Deck.getInitialDeck());
 		Player.cardHandler(Deck.getInitialDeckCard(79));
-		//if (Card.getValue(Deck.getInitialDeckCard(79)).toString() == "DrawTwo") {
-		//	
-		//}
 	}
 	
 	@Test 
 	void testPlayCard() {
-		
+		Deck deck = new Deck();
+		Deck.initializeDeck();
+		Deck.shuffleDeck(Deck.getInitialDeck());
+		GameState.inputNumPlayers();
+		Player player = new Player();
+		Player.initializeHand(GameState.getNumPlayers());
+		//System.out.println(Deck.getPlayingDeck().size());
+		Player.buildPlayerArr();
+		//System.out.println("this is the intial discard pile card : " + Deck.getTopCardPlayingDeck());
+		System.out.println("this is player 0's hand : " + Player.getPlayerHands().get(0));
+		Deck.addToDiscardPile(Deck.getTopCardPlayingDeck());
+		Deck.removeFromPlayDeck(Deck.getPlayDeckIndex());
+		System.out.println("this is the discard pile's top card : " + Deck.getTopCardDiscardPile());
+		System.out.println("this is the card to be drawn if no card is playable : " + Deck.getTopCardPlayingDeck());
+		System.out.println("this is the player 0's index : " + Player.getPlayerIndex());
+		Player.playCard();
+		System.out.println("\n" + "this is the next player's index : " + Player.getPlayerIndex());
+		System.out.println("this is the card that was played : " + Deck.getTopCardDiscardPile());
+
 	}
 	
 }
