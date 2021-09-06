@@ -1,143 +1,113 @@
 import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-
-//import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+/*
+ * Test Class to check if helper methods and class generation are working properly.
+ */
 
 public class JUnitTests {
 	GameState gamestate;
 	
-	@Test
-	void testNumberFillDeck() {
-		Deck deck = new Deck();
-		Deck.initializeDeck();
-		assertEquals(108, Deck.getInitialDeck().size());
+	@BeforeEach
+	void setUp() {
+		gamestate = new GameState();
 	}
-	
-	@Test
-	void testContentFillDeck() {
-		//Test if the ordering of the deck is consistent with the fillDeck() algorithm.
-		//final ArrayList<Card> playDeck = new ArrayList<Card>();
-		Deck deck = new Deck();
-		for (int i = 0; i < 108; i++) {
-			Card card = Deck.getInitialDeckCard(i);
-			assertEquals(card.toString(), Card.getColor(card).toString() + " - " + Card.getValue(card).toString());
-			System.out.println(card.toString());
-		}
-	}
-	
-	@Test 
-	void testNumberShuffle() {
-		Deck deck = new Deck();
-		Deck.initializeDeck();
-		Deck.shuffleDeck(Deck.getInitialDeck());
-		assertEquals(108, Deck.getPlayingDeck().size());
-	}
-	
 	
 	@Test
 	void testInitializeHand() {
-		Deck deck = new Deck();
-		Deck.initializeDeck();
-		Deck.shuffleDeck(Deck.getInitialDeck());
-		GameState.inputNumPlayers();
-		Player player = new Player();
-		Player.initializeHand(GameState.getNumPlayers());
-		System.out.println(Player.getPlayerHands());
-		for (int i = 0; i < Player.getPlayerHands().size(); i++) {
-			assertEquals(7, Player.getPlayerHands().get(i).size());
+		gamestate.setGameUp();
+		//System.out.println("\n" + gamestate.getInitialDeck().size());
+		assertEquals(gamestate.getInitialDeck().size(), 80);
+		for (int i = 0; i < gamestate.numPlayers; i++) {
+			assertEquals(gamestate.players[i].hand.size(), 7);
 		}
-		//ArrayList<Card> hand = Player.getPlayerHand(0);
-		//System.out.println(Deck.getPlayingDeck());
 	}
 	
 	@Test
+	void testNumberFillDeck() {
+		gamestate.setGameUp();
+		assertEquals(108, gamestate.getInitialDeck().size() + 7 * gamestate.numPlayers);
+	}
+	
+	
+	/*
+	Test if all 108 UNO cards are generated.
+	 */
+	@Test
+	void testContentFillDeck() {
+		gamestate.initializeDeck();
+		for (int i = 0; i < 108; i++) {
+			Card card = gamestate.getInitialDeckCard(i);
+			assertEquals(card.toString(), card.getColor() + " - " + card.getValue());
+			//System.out.println(card.toString());
+		}
+	}
+	
+	/*
+	 * Test if setNextPlayer correctly updates the index of the currentPlayer.
+	 */
+	@Test
 	void testSetNextPlayer() {
-		Deck deck = new Deck();
-		Deck.initializeDeck();
-		Deck.shuffleDeck(Deck.getInitialDeck());
-		GameState.inputNumPlayers();
-		Player player = new Player();
-		Player.buildPlayerArr();
-		Player.setNextPlayer();
-		assertEquals(1, Player.getPlayerIndex());
+		gamestate.setGameUp();
+		gamestate.setNextPlayer();
+		assertEquals(1, gamestate.getPlayerIndex());
+		gamestate.setNextPlayer();
+		assertEquals(2, gamestate.getPlayerIndex());
+		gamestate.setNextPlayer();
+		assertEquals(3, gamestate.getPlayerIndex());
+		gamestate.setNextPlayer();
+		assertEquals(0, gamestate.getPlayerIndex());
 	}
 	
 	@Test
 	void testReverseCard() {
-		Player.getDirection();
-		Player.reverseCard();
-		assertEquals(false, Player.getDirection());
+		gamestate.setGameUp();
+		Reverse reverse = new Reverse("Blue", "Reverse");
+		gamestate.cardHandler(reverse);
+		assertEquals(false, gamestate.getDirection());
+		//System.out.println("\n" + "this is the current player index after reversing the order " + gamestate.getPlayerIndex());
+		gamestate.cardHandler(reverse);
+		assertEquals(true, gamestate.getDirection());
+		//System.out.println("\n" + "this is the current player index after reversing the order again " + gamestate.getPlayerIndex());
 	}
+	
 	
 	@Test
 	void testDrawTwoCard() {
-		Deck deck = new Deck();
-		Deck.initializeDeck();
-		Deck.shuffleDeck(Deck.getInitialDeck());
-		GameState.inputNumPlayers();
-		Player player = new Player();
-		Player.initializeHand(GameState.getNumPlayers());
-		//System.out.println(Deck.getPlayingDeck().size());
-		Player.buildPlayerArr();
-		Player.drawTwoCard();
-		assertEquals(Deck.getPlayingDeck().size(), 108 - (GameState.getNumPlayers() * 7) - 2);
+		gamestate.setGameUp();
+		DrawTwo d2 = new DrawTwo("Blue", "DrawTwo");
+		gamestate.cardHandler(d2);
+		assertEquals(true, gamestate.getDirection());
+		//System.out.println("\n" + "this is the current player index after the turn " + gamestate.getPlayerIndex());
+		assertEquals(2, gamestate.getPlayerIndex());
+		assertEquals(2, gamestate.numStackedCards);
 	}
 	
 	@Test 
 	void testWildCard() {
-		Player.wildCard();
-		System.out.println("\n" + "Color is still " + Player.getCurrentColor());
+		gamestate.setGameUp();
+		Wild w = new Wild("Wild", "Wild");
+		gamestate.cardHandler(w);
+		assertEquals(true, gamestate.getDirection());
+		assertEquals(1, gamestate.getPlayerIndex());
+		assertEquals(0, gamestate.numStackedCards);
+		//System.out.println(gamestate.getCurrentColor());
+		assertEquals(gamestate.getCurrentColor(), "Blue");
+		
 	}
 	
 	@Test 
 	void testWildDrawFourCard() {
-		Deck deck = new Deck();
-		Deck.initializeDeck();
-		Deck.shuffleDeck(Deck.getInitialDeck());
-		GameState.inputNumPlayers();
-		Player player = new Player();
-		Player.initializeHand(GameState.getNumPlayers());
-		System.out.println(Deck.getPlayingDeck().size());
-		Player.buildPlayerArr();
-		Player.wildDrawFourCard();
-		assertEquals(Deck.getPlayingDeck().size(), 108 - (GameState.getNumPlayers() * 7) - 4);
-	}
-	@Test
-	void testCardHandler() {
-		Deck deck = new Deck();
-		Deck.initializeDeck();
-		Deck.shuffleDeck(Deck.getInitialDeck());
-		GameState.inputNumPlayers();
-		Player player = new Player();
-		Player.initializeHand(GameState.getNumPlayers());
-		System.out.println(Deck.getPlayingDeck().size());
-		Player.buildPlayerArr();
-		Player.cardHandler(Deck.getInitialDeckCard(79));
+		gamestate.setGameUp();
+		WildDrawFour w1 = new WildDrawFour("Wild", "WildDrawFour");
+		gamestate.cardHandler(w1);
+		assertEquals(true, gamestate.getDirection());
+		assertEquals(2, gamestate.getPlayerIndex());
+		assertEquals(4, gamestate.numStackedCards);
+		//System.out.println(gamestate.getCurrentColor());
+		assertEquals(gamestate.getCurrentColor(), "Blue");
 	}
 	
-	@Test 
-	void testPlayCard() {
-		Deck deck = new Deck();
-		Deck.initializeDeck();
-		Deck.shuffleDeck(Deck.getInitialDeck());
-		GameState.inputNumPlayers();
-		Player player = new Player();
-		Player.initializeHand(GameState.getNumPlayers());
-		//System.out.println(Deck.getPlayingDeck().size());
-		Player.buildPlayerArr();
-		//System.out.println("this is the intial discard pile card : " + Deck.getTopCardPlayingDeck());
-		System.out.println("this is player 0's hand : " + Player.getPlayerHands().get(0));
-		Deck.addToDiscardPile(Deck.getTopCardPlayingDeck());
-		Deck.removeFromPlayDeck(Deck.getPlayDeckIndex());
-		System.out.println("this is the discard pile's top card : " + Deck.getTopCardDiscardPile());
-		System.out.println("this is the card to be drawn if no card is playable : " + Deck.getTopCardPlayingDeck());
-		System.out.println("this is the player 0's index : " + Player.getPlayerIndex());
-		Player.playCard();
-		System.out.println("\n" + "this is the next player's index : " + Player.getPlayerIndex());
-		System.out.println("this is the card that was played : " + Deck.getTopCardDiscardPile());
-
-	}
 	
 }

@@ -1,61 +1,55 @@
- public class Card {
+ /*
+  * The Card class contains the framework of how UNO cards are stored as enumerations and includes getters and setters to access attributes of a specific card
+  */
+public abstract class Card {
 	
-	enum allColors {
-		Red, Blue, Green, Yellow, Wild;
-		private static allColors[] colors = allColors.values();
-		public static allColors getColor(int value) {
-			return allColors.colors[value];
-		}
+	public static String[] allColors = {"Red", "Blue", "Green", "Yellow", "Wild"};
+	
+	public static String[] getColors() {
+		return allColors;
 	}
 	
-	enum allValues {
-		Zero, One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Skip, Reverse, DrawTwo, Wild, WildDrawFour;
-		private static allValues[] values = allValues.values();
-		public static allValues getValue(int value) {
-			return allValues.values[value];
-		}
+	public static String[] allValues = {"Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Skip", "Reverse", "DrawTwo", "Wild", "WildDrawFour"};
+	
+	public static String[] getValues() {
+		return allValues;
 	}
 	
-	private allColors color;
-	private allValues value;
+	protected GameState gamestate;
 	
-	//Custom Constructor for all cards
+	String color;
+	String value;
 	
-	public Card(allColors color, allValues value) {
+	public Card(String color, String value) {
 		this.color = color;
 		this.value = value;
 	}
-
 	
-	public static allColors getColor(Card card) {
-		return card.color;
+	public String getColor() {
+		return this.color;
 	}
 	
-	public static allValues getValue(Card card) {
-		return card.value;
+	public String getValue() {
+		return this.value;
 	}
+	/*/
+	 * Checks if the card being played is valid.
+	 */
 	
-	@Override
-	/** Takes a card object and converts into a string representation.
-	*/
-	public String toString() {
-		return String.valueOf(this.color) + " - "+ String.valueOf(this.value);
-	}
-	
-	
-	
-	//Checks if the card being played is valid.
-	public static boolean validMove(Card currentCard, Card topCard) {
-		if (currentCard.color == topCard.color || currentCard.value == topCard.value || currentCard.color.toString() == "Wild" || currentCard.color.toString() == "WildDrawFour") {
+	public boolean validMove(Card topCard, GameState gamestate) {
+		if (this.color == topCard.color || this.value == topCard.value || this.color.toString() == "Wild" || this.color.toString() == "WildDrawFour" || this.color.toString() == gamestate.getCurrentColor()) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
-	
-	
-	
-	
+	@Override
+	/* 
+	 * Takes a card object and converts it into a string representation.
+	 */
+	public String toString() {
+		return String.valueOf(this.color) + " - "+ String.valueOf(this.value);
+	}
 
 }
