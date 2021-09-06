@@ -6,6 +6,9 @@ public class WildDrawFour extends Card {
 		super(color, value);
 	}
 	
+	/*
+	 * Reads user input and sets current color - updates gamestate instance variables
+	 */
 	public void playCard(GameState gamestate, Card card) {
 		System.out.println("\n" + "Enter Desired Color");
 		String color;
@@ -24,5 +27,4 @@ public class WildDrawFour extends Card {
 		gamestate.setNextPlayer();
 		gamestate.setNextPlayer();
 	}
-	
 }

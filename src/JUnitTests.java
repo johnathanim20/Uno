@@ -14,10 +14,13 @@ public class JUnitTests {
 		gamestate = new GameState();
 	}
 	
+	
+	/*
+	 * Test the initial player's hand size. Each player should have 7 cards.
+	 */
 	@Test
 	void testInitializeHand() {
 		gamestate.setGameUp();
-		//System.out.println("\n" + gamestate.getInitialDeck().size());
 		assertEquals(gamestate.getInitialDeck().size(), 80);
 		for (int i = 0; i < gamestate.numPlayers; i++) {
 			assertEquals(gamestate.players[i].hand.size(), 7);
@@ -60,6 +63,9 @@ public class JUnitTests {
 		assertEquals(0, gamestate.getPlayerIndex());
 	}
 	
+	/*
+	 * Test when a reverse card is played and if the direction of the gamestate is updated.
+	 */
 	@Test
 	void testReverseCard() {
 		gamestate.setGameUp();
@@ -72,7 +78,9 @@ public class JUnitTests {
 		//System.out.println("\n" + "this is the current player index after reversing the order again " + gamestate.getPlayerIndex());
 	}
 	
-	
+	/*
+	 * Test when a draw2 card is played and if playerindex and stackedcards are updated.
+	 */
 	@Test
 	void testDrawTwoCard() {
 		gamestate.setGameUp();
@@ -84,6 +92,9 @@ public class JUnitTests {
 		assertEquals(2, gamestate.numStackedCards);
 	}
 	
+	/*
+	 * Test when a wild card is played and if current color is set to user input
+	 */
 	@Test 
 	void testWildCard() {
 		gamestate.setGameUp();
@@ -92,11 +103,13 @@ public class JUnitTests {
 		assertEquals(true, gamestate.getDirection());
 		assertEquals(1, gamestate.getPlayerIndex());
 		assertEquals(0, gamestate.numStackedCards);
-		//System.out.println(gamestate.getCurrentColor());
+		System.out.println(gamestate.getCurrentColor());
 		assertEquals(gamestate.getCurrentColor(), "Blue");
 		
 	}
-	
+	/*
+	 * Test when a wild4 card is played and if current color is set to user input, and if playerindex and stacked cards are updated properly.
+	 */
 	@Test 
 	void testWildDrawFourCard() {
 		gamestate.setGameUp();
@@ -105,9 +118,50 @@ public class JUnitTests {
 		assertEquals(true, gamestate.getDirection());
 		assertEquals(2, gamestate.getPlayerIndex());
 		assertEquals(4, gamestate.numStackedCards);
-		//System.out.println(gamestate.getCurrentColor());
+		System.out.println(gamestate.getCurrentColor());
 		assertEquals(gamestate.getCurrentColor(), "Blue");
 	}
 	
+	@Test
+	/*
+	 * Test to see if when 2 consecutive draw 2 cards are played, the next next player pays the penalty if he does not have anything to stack.
+	 */
+	void testStackedCards() {
+		gamestate.setGameUp();
+		DrawTwo d2 = new DrawTwo("Blue", "DrawTwo");
+		gamestate.addToDiscardPile(d2);
+		gamestate.players[0].hand.clear();
+		gamestate.players[0].hand.add(d2);
+		gamestate.players[1].hand.clear();
+		gamestate.players[1].hand.add(d2);
+		gamestate.players[2].hand.clear();
+		gamestate.cardHandler(d2);
+		gamestate.cardHandler(d2);
+		gamestate.setNextPlayer();
+		gamestate.setNextPlayer();
+		gamestate.handlePenalty();
+		assertEquals(gamestate.players[2].hand.size(), 4);
+	}
+	
+	/*
+	 * Test to see if when 2 consecutive draw4 cards are played, the next next player pays the penalty if he does not have anything to stack.
+	 */
+	@Test
+	void testStackedCards2() {
+		gamestate.setGameUp();
+		WildDrawFour d2 = new WildDrawFour("Wild", "WildDrawFour");
+		gamestate.addToDiscardPile(d2);
+		gamestate.players[0].hand.clear();
+		gamestate.players[0].hand.add(d2);
+		gamestate.players[1].hand.clear();
+		gamestate.players[1].hand.add(d2);
+		gamestate.players[2].hand.clear();
+		gamestate.cardHandler(d2);
+		gamestate.cardHandler(d2);
+		gamestate.setNextPlayer();
+		gamestate.setNextPlayer();
+		gamestate.handlePenalty();
+		assertEquals(gamestate.players[2].hand.size(), 8);
+	}
 	
 }

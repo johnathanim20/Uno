@@ -44,10 +44,11 @@ public abstract class Card {
 		}
 	}
 	
-	@Override
+	
 	/* 
 	 * Takes a card object and converts it into a string representation.
 	 */
+	@Override
 	public String toString() {
 		return String.valueOf(this.color) + " - "+ String.valueOf(this.value);
 	}

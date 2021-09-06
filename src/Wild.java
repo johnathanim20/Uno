@@ -6,6 +6,9 @@ public class Wild extends Card {
 		super(color, value);
 	}
 	
+	/*
+	 * Reads user input and sets current color - updates gamestate instance variables
+	 */
 	public void playCard(GameState gamestate, Card card) {
 		System.out.println("\n" + "Enter Desired Color");
 		String color;
@@ -20,6 +23,7 @@ public class Wild extends Card {
 		gamestate.addToDiscardPile(card); //move to discard pile
 		gamestate.players[gamestate.currentPlayerIndex].removeFromHand(card); //remove played card from hand
 		gamestate.drawStackedCards = false;
+		gamestate.numStackedCards = 0;
 		gamestate.setNextPlayer();
 	}
 }

@@ -1,3 +1,4 @@
+
 //import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -29,6 +30,9 @@ public class GameState {
 		gameEnd = false;
 	}
 	
+	/*
+	 * Function used for initializing game environment - for testing
+	 */
 	public void setGameUp() {
 		initializeDeck();
 		shuffleDeck();
@@ -200,7 +204,7 @@ public class GameState {
 		boolean flag = false;
 		if (getTopCardDiscardPile().getValue().toString() == "WildDrawFour") {
 			for (int i = 0; i < players[currentPlayerIndex].getHand().size(); i++) {
-				if ((players[currentPlayerIndex].getCardInHand(i).getValue().toString() != "WildDrawFour")) {
+				if ((players[currentPlayerIndex].getCardInHand(i).getValue().toString() == "WildDrawFour")) {
 					flag = true;
 				}
 			}
@@ -213,12 +217,9 @@ public class GameState {
 					removeFromPlayDeck(getPlayDeckIndex() - j);
 				}
 			}
-			numStackedCards = 0;
-			drawStackedCards = false;
-			setNextPlayer();
 		} else if (getTopCardDiscardPile().getValue().toString() == "DrawTwo") {
 			for (int i = 0; i < players[currentPlayerIndex].getHand().size(); i++) {
-				if ((players[currentPlayerIndex].getCardInHand(i).getValue().toString() != "DrawTwo")) {
+				if ((players[currentPlayerIndex].getCardInHand(i).getValue().toString() == "DrawTwo")) {
 					flag = true;
 				}
 			}
@@ -231,9 +232,6 @@ public class GameState {
 					removeFromPlayDeck(getPlayDeckIndex() - j);
 				}
 			}
-			numStackedCards = 0;	
-			drawStackedCards = false;
-			setNextPlayer();
 		}
 	}
 
@@ -246,6 +244,10 @@ public class GameState {
 		}
 	}
 	
+	
+	/*
+	 * Method that handles whenever a card is played and handles their effect
+	 */
 	public void cardHandler(Card card) {
 		if (card.getValue().toString() == "WildDrawFour") {
 			WildDrawFour wildDrawFour = (WildDrawFour) card;

@@ -4,6 +4,9 @@ public class Reverse extends Card {
 		super(color, value);
 	}
 	
+	/*
+	 * Updates gamestate instance variables
+	 */
 	public void playCard(GameState gamestate, Card card) {
 		if (validMove(card, gamestate)) {
 			gamestate.drawStackedCards = false;
@@ -12,9 +15,8 @@ public class Reverse extends Card {
 			gamestate.setCurrentColor(card.getColor().toString()); //sets current color
 			gamestate.clockwise = !(gamestate.clockwise);
 			gamestate.drawStackedCards = false;
+			gamestate.numStackedCards = 0;
 			gamestate.setNextPlayer();
 		}
 	}
-	
-	
 }
