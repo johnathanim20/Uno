@@ -1,7 +1,17 @@
  /*
-  * The Card class contains the framework of how UNO cards are stored as enumerations and includes getters and setters to access attributes of a specific card
+  * The Card class contains the framework of how UNO cards are stored as String combinations and includes getters and setters to access attributes of a specific card
   */
 public abstract class Card {
+	
+	protected GameState gamestate;
+	String color;
+	String value;
+	
+	public Card(String color, String value) {
+		this.color = color;
+		this.value = value;
+	}
+	
 	
 	public static String[] allColors = {"Red", "Blue", "Green", "Yellow", "Wild"};
 	
@@ -15,15 +25,6 @@ public abstract class Card {
 		return allValues;
 	}
 	
-	protected GameState gamestate;
-	
-	String color;
-	String value;
-	
-	public Card(String color, String value) {
-		this.color = color;
-		this.value = value;
-	}
 	
 	public String getColor() {
 		return this.color;
@@ -32,6 +33,7 @@ public abstract class Card {
 	public String getValue() {
 		return this.value;
 	}
+	
 	/*/
 	 * Checks if the card being played is valid.
 	 */

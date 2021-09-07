@@ -1,5 +1,3 @@
-
-//import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -197,6 +195,7 @@ public class GameState {
 			currentPlayer = players[currentPlayerIndex];
 		}	
 	} 	
+	
 	/*
 	 * helper function to add number of stacked cards to a player's hand.
 	 */
@@ -271,7 +270,7 @@ public class GameState {
 	}
 	
 	
-	/** Method that handles playing a Card in a GameState instance. 
+	/** Method that handles playing a Card in a GameState instance. - still bugged
 	
 	public void playCard() {
 		if (players[currentPlayerIndex].isHandEmpty()) {
