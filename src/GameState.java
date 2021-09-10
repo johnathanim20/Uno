@@ -5,15 +5,15 @@ import java.util.Scanner;
  * The GameState Class is used to generate an Instance of the Card Game 'UNO' by utilizing the Player, Card, and Deck Classes.
  */
 public class GameState {
-	static boolean gameEnd;
+	boolean gameEnd;
 	boolean drawStackedCards;
 	int numPlayers = 0;
 	int numStackedCards = 0;
 	int currentPlayerIndex;
 	Player[] players; 
 	boolean clockwise;
-	static Player currentPlayer;
-	static String currentColor;
+	Player currentPlayer;
+	String currentColor;
 	private ArrayList<Card> initialDeck = new ArrayList<Card> ();
 	private ArrayList<Card> discardPile = new ArrayList<Card> ();
 	private ArrayList<Card> playingDeck = new ArrayList<Card> ();
@@ -33,11 +33,23 @@ public class GameState {
 	public void setGameUp() {
 		initializeDeck();
 		shuffleDeck();
+		discardPile.add(playingDeck.get(playDeckIndex));
+		removeFromPlayDeck(playDeckIndex);
+		currentColor = getTopCardDiscardPile().getColor();
 		inputNumPlayers();
 		buildPlayerArr();
 		currentPlayer = players[0];
 	}
 	
+	public int hasWon() {
+		for (int i = 0; i < players.length; i++) {
+			if (players[i].hand.isEmpty()) {
+				gameEnd = true;
+				return i;
+			}
+		}
+		return -1;
+	}
 	public void clearDecks() {
 		initialDeck.clear();
 		discardPile.clear();
@@ -209,7 +221,7 @@ public class GameState {
 	public void buildPlayerArr() {
 		players = new Player[numPlayers];
 		for (int i = 0; i < numPlayers; i++) {
-			players[i] = new Player();
+			players[i] = new Player(i);
 			players[i].initializeHand(this);
 		}
 	}

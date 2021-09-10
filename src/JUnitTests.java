@@ -62,6 +62,20 @@ public class JUnitTests {
 		gamestate.setNextPlayer();
 		assertEquals(0, gamestate.getPlayerIndex());
 	}
+	/*
+	 * Test when a reverse card is played and if the direction of the gamestate is updated.
+	 */
+	@Test
+	void testNormal() {
+		gamestate.setGameUp();
+		IntegerCard n = new IntegerCard("Blue", "1");
+		gamestate.cardHandler(n, gamestate.getPlayer().getHand());
+		assertEquals(true, gamestate.getDirection());
+	
+		gamestate.cardHandler(n, gamestate.getPlayer().getHand());
+		
+		
+	}
 	
 	/*
 	 * Test when a reverse card is played and if the direction of the gamestate is updated.

@@ -5,10 +5,12 @@ import java.util.ArrayList;
  */
 public class Player {	
 	public ArrayList<Card> hand;
+	int playerIndex;
 	
 	
-	public Player() {
+	public Player(int index) {
 		hand = new ArrayList<Card> ();
+		playerIndex = index;
 		//this.playerIndex = playerIndex;
 	}
 	
