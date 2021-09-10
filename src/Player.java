@@ -5,11 +5,11 @@ import java.util.ArrayList;
  */
 public class Player {	
 	public ArrayList<Card> hand;
-	int playerIndex;
 	
-	public Player(int playerIndex) {
+	
+	public Player() {
 		hand = new ArrayList<Card> ();
-		this.playerIndex = playerIndex;
+		//this.playerIndex = playerIndex;
 	}
 	
 	public void initializeHand(GameState gamestate) {
@@ -45,6 +45,7 @@ public class Player {
 		return hand.size();
 	}
 	
+	/*
 	public int getPlayersIndex() {
 		return this.playerIndex;
 	}
@@ -52,7 +53,7 @@ public class Player {
 	public void setPlayersIndex(int index) {
 		this.playerIndex = index;
 	}
-	
+	*/
 	
 }
  

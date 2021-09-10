@@ -8,7 +8,7 @@ public class Skip extends Card {
 	 * Updates gamestate instance variables
 	 */
 	public void playCard(GameState gamestate, Card card) {
-		if (validMove(card, gamestate)) {
+		if (validMove(null, card, gamestate)) {
 			gamestate.drawStackedCards = false;
 			gamestate.addToDiscardPile(card); //move to discard pile
 			gamestate.players[gamestate.currentPlayerIndex].removeFromHand(card); //remove played card from hand

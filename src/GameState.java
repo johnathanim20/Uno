@@ -5,7 +5,6 @@ import java.util.Scanner;
  * The GameState Class is used to generate an Instance of the Card Game 'UNO' by utilizing the Player, Card, and Deck Classes.
  */
 public class GameState {
-	
 	static boolean gameEnd;
 	boolean drawStackedCards;
 	int numPlayers = 0;
@@ -15,10 +14,10 @@ public class GameState {
 	boolean clockwise;
 	static Player currentPlayer;
 	static String currentColor;
-	public ArrayList<Card> initialDeck = new ArrayList<Card> ();
-	public ArrayList<Card> discardPile = new ArrayList<Card> ();
-	public ArrayList<Card> playingDeck = new ArrayList<Card> ();
-	public int playDeckIndex = 107;
+	private ArrayList<Card> initialDeck = new ArrayList<Card> ();
+	private ArrayList<Card> discardPile = new ArrayList<Card> ();
+	private ArrayList<Card> playingDeck = new ArrayList<Card> ();
+	private int playDeckIndex = 107;
 	
 	public GameState() {
 		currentPlayer = null;
@@ -80,6 +79,39 @@ public class GameState {
 		playingDeck.remove(index);
 		playDeckIndex--;
 	}
+	
+	public void additionRule(ArrayList<Card> hand) {
+		int value = Integer.parseInt(getTopCardDiscardPile().getValue());
+		for (int i = 0; i < hand.size() - 1; i++) {
+			for (int j = i + 1; j < hand.size(); j++) {
+				if (value == ((Integer.parseInt(hand.get(i).getValue())) + Integer.parseInt(hand.get(j).getValue())) && (hand.get(i).getColor() == hand.get(j).getColor())) {
+					IntegerCard card1 = (IntegerCard) hand.get(i);
+					IntegerCard card2 = (IntegerCard) hand.get(j);
+					card1.playCard(this, card1);
+					card2.playCard(this, card2);
+					setNextPlayer();
+					return;
+				}
+			}
+		}
+	}
+	
+	public void subtractionRule(ArrayList<Card> hand) {
+		int value = Integer.parseInt(getTopCardDiscardPile().getValue());
+		for (int i = 0; i < hand.size() - 1; i++) {
+			for (int j = i + 1; j < hand.size(); j++) {
+				if (value == (Math.abs((Integer.parseInt(hand.get(i).getValue())) - Integer.parseInt(hand.get(j).getValue()))) && (hand.get(i).getColor() == hand.get(j).getColor())) {
+					IntegerCard card1 = (IntegerCard) hand.get(i);
+					IntegerCard card2 = (IntegerCard) hand.get(j);
+					card1.playCard(this, card1);
+					card2.playCard(this, card2);
+					setNextPlayer();
+					return;
+				}
+			}
+		}
+	}
+	
 	/*
 	 * Method that generates a standard deck of 108 UNO cards 
 	 */
@@ -177,7 +209,7 @@ public class GameState {
 	public void buildPlayerArr() {
 		players = new Player[numPlayers];
 		for (int i = 0; i < numPlayers; i++) {
-			players[i] = new Player(i);
+			players[i] = new Player();
 			players[i].initializeHand(this);
 		}
 	}
@@ -247,30 +279,34 @@ public class GameState {
 	/*
 	 * Method that handles whenever a card is played and handles their effect
 	 */
-	public void cardHandler(Card card) {
-		if (card.getValue().toString() == "WildDrawFour") {
+	public void cardHandler(Card card, ArrayList<Card> playerHand) {
+		if (card.getValue() == "WildDrawFour") {
 			WildDrawFour wildDrawFour = (WildDrawFour) card;
 			wildDrawFour.playCard(this, card);
-		} else if (card.getValue().toString() == "DrawTwo") {
+		} else if (card.getValue() == "DrawTwo") {
 			DrawTwo drawTwo = (DrawTwo) card;
 			drawTwo.playCard(this, card);
-		} else if (card.getValue().toString() == "Skip") {
+		} else if (card.getValue() == "Skip") {
 			Skip skip = (Skip) card;
 			skip.playCard(this, card);
-		} else if (card.getValue().toString() == "Reverse") {
+		} else if (card.getValue() == "Reverse") {
 			Reverse reverse = (Reverse) card;
 			reverse.playCard(this, card);
-		} else if (card.getValue().toString() == "Wild") {
+		} else if (card.getValue() == "Wild") {
 			Wild wild = (Wild) card;
 			wild.playCard(this, card);
+		} else if (card.newRules(playerHand, getTopCardDiscardPile())) {
+			subtractionRule(playerHand);
+			additionRule(playerHand);
 		} else {
-			Wild wild = (Wild) card;
-			wild.playCard(this, card);
+			IntegerCard intCard = (IntegerCard) card;
+			intCard.playCard(this, card);
+			setNextPlayer();
 		}
 	}
 	
 	
-	/** Method that handles playing a Card in a GameState instance. - still bugged
+	// Method that handles playing a Card in a GameState instance. - still bugged
 	
 	public void playCard() {
 		if (players[currentPlayerIndex].isHandEmpty()) {
@@ -282,24 +318,21 @@ public class GameState {
 		}
 		
 		for (int j = 0; j < players[currentPlayerIndex].getHand().size(); j++) {
-			if (players[currentPlayerIndex].getCardInHand(j).validMove(getTopCardDiscardPile(), this)) {
+			if (players[currentPlayerIndex].getCardInHand(j).validMove(currentPlayer.getHand(), getTopCardDiscardPile(), this)) {
 				handlePenalty();
-				cardHandler(players[currentPlayerIndex].getCardInHand(j)); //handle card effect
+				cardHandler(players[currentPlayerIndex].getCardInHand(j), currentPlayer.getHand()); //handle card effect
 				return;
 			}
 		}
 		//otherwise draw from deck and play if possible... if not, no card will be played
 		Card draw1 = getTopCardPlayingDeck();
 		players[currentPlayerIndex].addToHand(draw1);
-		players[currentPlayerIndex].removeFromHand(draw1);
-		if (getTopCardDiscardPile().validMove(draw1, this)) {
+		if (draw1.validMove(currentPlayer.getHand(), getTopCardDiscardPile(), this)) {
 			handlePenalty();
 			addToDiscardPile(draw1);
 			setCurrentColor(draw1.getColor().toString());		
-			cardHandler(draw1);
+			cardHandler(draw1, currentPlayer.getHand());
 			return;
 		} 
-		setNextPlayer();
 	}
-	**/
 }

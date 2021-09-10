@@ -70,10 +70,10 @@ public class JUnitTests {
 	void testReverseCard() {
 		gamestate.setGameUp();
 		Reverse reverse = new Reverse("Blue", "Reverse");
-		gamestate.cardHandler(reverse);
+		gamestate.cardHandler(reverse, gamestate.getPlayer().getHand());
 		assertEquals(false, gamestate.getDirection());
 		//System.out.println("\n" + "this is the current player index after reversing the order " + gamestate.getPlayerIndex());
-		gamestate.cardHandler(reverse);
+		gamestate.cardHandler(reverse, gamestate.getPlayer().getHand());
 		assertEquals(true, gamestate.getDirection());
 		//System.out.println("\n" + "this is the current player index after reversing the order again " + gamestate.getPlayerIndex());
 	}
@@ -85,7 +85,7 @@ public class JUnitTests {
 	void testDrawTwoCard() {
 		gamestate.setGameUp();
 		DrawTwo d2 = new DrawTwo("Blue", "DrawTwo");
-		gamestate.cardHandler(d2);
+		gamestate.cardHandler(d2, gamestate.getPlayer().getHand());
 		assertEquals(true, gamestate.getDirection());
 		//System.out.println("\n" + "this is the current player index after the turn " + gamestate.getPlayerIndex());
 		assertEquals(2, gamestate.getPlayerIndex());
@@ -99,7 +99,7 @@ public class JUnitTests {
 	void testWildCard() {
 		gamestate.setGameUp();
 		Wild w = new Wild("Wild", "Wild");
-		gamestate.cardHandler(w);
+		gamestate.cardHandler(w, gamestate.getPlayer().getHand());
 		assertEquals(true, gamestate.getDirection());
 		assertEquals(1, gamestate.getPlayerIndex());
 		assertEquals(0, gamestate.numStackedCards);
@@ -114,7 +114,7 @@ public class JUnitTests {
 	void testWildDrawFourCard() {
 		gamestate.setGameUp();
 		WildDrawFour w1 = new WildDrawFour("Wild", "WildDrawFour");
-		gamestate.cardHandler(w1);
+		gamestate.cardHandler(w1, gamestate.getPlayer().getHand());
 		assertEquals(true, gamestate.getDirection());
 		assertEquals(2, gamestate.getPlayerIndex());
 		assertEquals(4, gamestate.numStackedCards);
@@ -135,8 +135,8 @@ public class JUnitTests {
 		gamestate.players[1].hand.clear();
 		gamestate.players[1].hand.add(d2);
 		gamestate.players[2].hand.clear();
-		gamestate.cardHandler(d2);
-		gamestate.cardHandler(d2);
+		gamestate.cardHandler(d2, gamestate.getPlayer().getHand());
+		gamestate.cardHandler(d2, gamestate.getPlayer().getHand());
 		gamestate.setNextPlayer();
 		gamestate.setNextPlayer();
 		gamestate.handlePenalty();
@@ -156,12 +156,86 @@ public class JUnitTests {
 		gamestate.players[1].hand.clear();
 		gamestate.players[1].hand.add(d2);
 		gamestate.players[2].hand.clear();
-		gamestate.cardHandler(d2);
-		gamestate.cardHandler(d2);
+		gamestate.cardHandler(d2, gamestate.getPlayer().getHand());
+		gamestate.cardHandler(d2, gamestate.getPlayer().getHand());
 		gamestate.setNextPlayer();
 		gamestate.setNextPlayer();
 		gamestate.handlePenalty();
 		assertEquals(gamestate.players[2].hand.size(), 8);
 	}
 	
+	@Test
+	void testAddRule() {
+		gamestate.setGameUp();
+		IntegerCard c1 = new IntegerCard("Blue", "5");
+		IntegerCard c2 = new IntegerCard("Yellow", "3");
+		IntegerCard c3 = new IntegerCard("Yellow", "2");
+		
+		gamestate.addToDiscardPile(c1);
+		gamestate.players[0].hand.clear();
+		gamestate.players[0].hand.add(c2);
+		gamestate.players[0].hand.add(c3);
+		
+		System.out.println(gamestate.players[0].hand);
+		System.out.println(gamestate.getDiscardPile());
+		gamestate.cardHandler(c1, gamestate.players[0].hand);
+		
+		System.out.println(gamestate.getDiscardPile());
+		System.out.println(gamestate.players[0].hand);
+	
+	}
+	
+	@Test
+	void testAddRule2() {
+		gamestate.setGameUp();
+		IntegerCard c1 = new IntegerCard("Blue", "5");
+		IntegerCard c2 = new IntegerCard("Yellow", "1");
+		IntegerCard c3 = new IntegerCard("Yellow", "2");
+		IntegerCard c4 = new IntegerCard("Yellow", "3");
+		gamestate.addToDiscardPile(c1);
+		gamestate.players[0].hand.clear();
+		gamestate.players[0].hand.add(c2);
+		gamestate.players[0].hand.add(c3);
+		gamestate.players[0].hand.add(c4);
+		System.out.println(gamestate.players[0].hand.size());
+		gamestate.cardHandler(c4, gamestate.players[0].hand);
+		System.out.println(gamestate.getDiscardPile());
+		System.out.println(gamestate.players[0].hand);
+		System.out.println(gamestate.getPlayerIndex());
+	}
+	
+	@Test
+	void testAddRule3() {
+		gamestate.setGameUp();
+		IntegerCard c1 = new IntegerCard("Blue", "5");
+		IntegerCard c2 = new IntegerCard("Yellow", "1");
+		IntegerCard c3 = new IntegerCard("Yellow", "2");
+		IntegerCard c4 = new IntegerCard("Yellow", "8");
+		gamestate.addToDiscardPile(c1);
+		gamestate.players[0].hand.clear();
+		gamestate.players[0].hand.add(c2);
+		gamestate.players[0].hand.add(c3);
+		gamestate.players[0].hand.add(c4);
+		System.out.println(gamestate.players[0].hand.size());
+		gamestate.cardHandler(c4, gamestate.players[0].hand);
+		System.out.println(gamestate.getDiscardPile());
+		System.out.println(gamestate.players[0].hand);
+		System.out.println(gamestate.getPlayerIndex());
+	}
+	@Test
+	void testSubRule() {
+		gamestate.setGameUp();
+		IntegerCard c1 = new IntegerCard("Blue", "5");
+		IntegerCard c2 = new IntegerCard("Yellow", "9");
+		IntegerCard c3 = new IntegerCard("Yellow", "3");
+		IntegerCard c4 = new IntegerCard("Yellow", "4");
+		gamestate.addToDiscardPile(c1);
+		gamestate.players[0].hand.clear();
+		gamestate.players[0].hand.add(c2);
+		gamestate.players[0].hand.add(c3);
+		gamestate.players[0].hand.add(c4);
+		gamestate.cardHandler(c4, gamestate.players[0].hand);
+		System.out.println(gamestate.getDiscardPile());
+		System.out.println(gamestate.players[0].hand);
+	}
 }
