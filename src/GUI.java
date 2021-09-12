@@ -55,6 +55,7 @@ public class GUI implements ActionListener {
 		frame.pack();
 		frame.setVisible(true);
 		makeInitialLabels();
+		gameEnded();
 	}
 	
 	public void makeInitialLabels() {
@@ -151,18 +152,17 @@ public class GUI implements ActionListener {
 	}
 	
 	public void gameEnded() {
-		if (gamestate.gameEnd) {
-			frameEnd = new JFrame();
-			endPanel = new JPanel();
-			endPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30));
-			endPanel.setLayout(new GridLayout(0, 1));
-			frameEnd.add(endPanel, BorderLayout.CENTER);
-			frameEnd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frameEnd.setTitle("Game Ended");
-			frameEnd.pack();
-			frameEnd.setVisible(true);
-			endMessage = new JLabel("Congratulations player " + gamestate.hasWon() + " You Won!");
-		}
+		frameEnd = new JFrame();
+		endPanel = new JPanel();
+		endPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30));
+		endPanel.setLayout(new GridLayout(0, 1));
+		frameEnd.add(endPanel, BorderLayout.CENTER);
+		frameEnd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frameEnd.setTitle("Game Ended");
+		frameEnd.pack();
+		frameEnd.setVisible(true);
+		endMessage = new JLabel("Congratulations player " + gamestate.hasWon() + ", You Won!");
+		endPanel.add(endMessage);
 	}
 	
 	public void onStartPress() {

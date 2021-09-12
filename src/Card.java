@@ -41,6 +41,10 @@ public abstract class Card {
 	public boolean newRules(ArrayList<Card> hand, Card topCard) {
 		for (int i = 0; i < hand.size() - 1; i++) {
 			for (int j = i + 1; j < hand.size(); j++) {
+				if (hand.get(i).getValue() == "DrawTwo" || hand.get(j).getValue() == "DrawTwo" || hand.get(i).getValue() == "Wild" || hand.get(j).getValue() == "Wild" || hand.get(i).getValue() == "WildDrawFour" || hand.get(j).getValue() == "WildDrawFour" ||
+						hand.get(i).getValue() == "Reverse" || hand.get(j).getValue() == "Reverse" || hand.get(i).getValue() == "Skip" || hand.get(j).getValue() == "Skip") {
+					return false;
+				}
 				if (Integer.parseInt(topCard.getValue()) == ((Integer.parseInt(hand.get(i).getValue())) + Integer.parseInt(hand.get(j).getValue())) && (hand.get(i).getColor() == hand.get(j).getColor())) {
 					return true;
 				} else if (Integer.parseInt(topCard.getValue()) == (Math.abs((Integer.parseInt(hand.get(i).getValue())) - Integer.parseInt(hand.get(j).getValue()))) && (hand.get(i).getColor() == hand.get(j).getColor())) {

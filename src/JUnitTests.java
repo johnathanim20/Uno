@@ -21,7 +21,7 @@ public class JUnitTests {
 	@Test
 	void testInitializeHand() {
 		gamestate.setGameUp();
-		assertEquals(gamestate.getInitialDeck().size(), 80);
+		assertEquals(gamestate.getInitialDeck().size(), 79);
 		for (int i = 0; i < gamestate.numPlayers; i++) {
 			assertEquals(gamestate.players[i].hand.size(), 7);
 		}
@@ -30,7 +30,7 @@ public class JUnitTests {
 	@Test
 	void testNumberFillDeck() {
 		gamestate.setGameUp();
-		assertEquals(108, gamestate.getInitialDeck().size() + 7 * gamestate.numPlayers);
+		assertEquals(108, gamestate.getInitialDeck().size() + 7 * gamestate.numPlayers + 1);
 	}
 	
 	
@@ -71,9 +71,6 @@ public class JUnitTests {
 		IntegerCard n = new IntegerCard("Blue", "1");
 		gamestate.cardHandler(n, gamestate.getPlayer().getHand());
 		assertEquals(true, gamestate.getDirection());
-	
-		gamestate.cardHandler(n, gamestate.getPlayer().getHand());
-		
 		
 	}
 	

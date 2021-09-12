@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import java.util.Scanner;
+
 
 /* 
  * The GameState Class is used to generate an Instance of the Card Game 'UNO' by utilizing the Player, Card, and Deck Classes.
@@ -203,6 +203,7 @@ public class GameState {
 	 * Method to read user input to determine number of players in the game.
 	 */
 	public void inputNumPlayers() {
+		/**
 		Scanner playerNumber = new Scanner(System.in);
 		System.out.println("Enter Number of Desired Players : ");
 		int numberPlayers = 0;
@@ -213,6 +214,8 @@ public class GameState {
 		} else {
 			playerNumber.close();
 		}
+		*/
+		numPlayers = 4;
 	}
 
 	/*
