@@ -34,33 +34,53 @@ public abstract class Card {
 		return this.value;
 	}
 	
-	/*/
-	 * Checks if the card being played is valid.
+	/*
+	 * New method that checks for addition/subtraction rules required in assignment 1.1
 	 */
+
 	
-	public boolean newRules(ArrayList<Card> hand, Card topCard) {
+	public boolean checkAddRule(ArrayList<Card> hand) {
 		for (int i = 0; i < hand.size() - 1; i++) {
 			for (int j = i + 1; j < hand.size(); j++) {
-				if (hand.get(i).getValue() == "DrawTwo" || hand.get(j).getValue() == "DrawTwo" || hand.get(i).getValue() == "Wild" || hand.get(j).getValue() == "Wild" || hand.get(i).getValue() == "WildDrawFour" || hand.get(j).getValue() == "WildDrawFour" ||
-						hand.get(i).getValue() == "Reverse" || hand.get(j).getValue() == "Reverse" || hand.get(i).getValue() == "Skip" || hand.get(j).getValue() == "Skip") {
-					return false;
+				try {
+					if (Integer.parseInt(this.getValue()) == ((Integer.parseInt(hand.get(i).getValue())) + Integer.parseInt(hand.get(j).getValue())) && (hand.get(i).getColor().equals(hand.get(j).getColor()))) {
+						return true;
+					}
 				}
-				if (Integer.parseInt(topCard.getValue()) == ((Integer.parseInt(hand.get(i).getValue())) + Integer.parseInt(hand.get(j).getValue())) && (hand.get(i).getColor() == hand.get(j).getColor())) {
-					return true;
-				} else if (Integer.parseInt(topCard.getValue()) == (Math.abs((Integer.parseInt(hand.get(i).getValue())) - Integer.parseInt(hand.get(j).getValue()))) && (hand.get(i).getColor() == hand.get(j).getColor())) {
-					return true;
+				catch (NumberFormatException e) {
+						return false;
 				}
 			}
 		}
 		return false;
 	}
 	
-	public boolean validMove(ArrayList<Card> hand, Card topCard, GameState gamestate) {
-		if (this.color == topCard.color || this.value == topCard.value || this.color == "Wild" || this.color == "WildDrawFour" || this.color == gamestate.getCurrentColor()) {
+	
+	public boolean checkSubRule(ArrayList<Card> hand) {
+		for (int i = 0; i < hand.size() - 1; i++) {
+			for (int j = i + 1; j < hand.size(); j++) {
+				try {
+					if (Integer.parseInt(this.getValue()) == ((Integer.parseInt(hand.get(i).getValue())) + Integer.parseInt(hand.get(j).getValue())) && (hand.get(i).getColor().equals(hand.get(j).getColor()))) {
+						return true;
+					}
+				}
+				catch (NumberFormatException e) {
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/*
+	 * Checks if the card being played is valid.
+	 */
+	public boolean validMove(ArrayList<Card> hand, GameState gamestate) {
+		if (this.color.equals(gamestate.getTopCardDiscardPile().getColor()) || this.value.equals(gamestate.getTopCardDiscardPile().getValue()) || this.color.equals("Wild") || this.color.equals("WildDrawFour") || this.color.equals(gamestate.getCurrentColor())) {
 			return true;
 		} else {
 		//addition and subtraction rules are now valid plays.
-			return newRules(hand, topCard);
+			return checkAddRule(hand) || checkSubRule(hand);
 		}
 	}
 	
@@ -73,5 +93,7 @@ public abstract class Card {
 	public String toString() {
 		return String.valueOf(this.color) + " - "+ String.valueOf(this.value);
 	}
+	
+
 
 }

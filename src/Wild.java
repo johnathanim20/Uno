@@ -1,4 +1,4 @@
-import java.util.Scanner;
+
 
 public class Wild extends Card {
 
@@ -9,21 +9,18 @@ public class Wild extends Card {
 	/*
 	 * Reads user input and sets current color - updates gamestate instance variables
 	 */
-	public void playCard(GameState gamestate, Card card) {
-		System.out.println("\n" + "Enter Desired Color");
-		String color;
-		Scanner myColor = new Scanner(System.in);
-		if (myColor.hasNextLine()) {
-			color = myColor.nextLine();
-			System.out.println("Color is : " + color);
-			gamestate.setCurrentColor(color);
-		} else {
-			myColor.close();
+	public void playCard(GameState gamestate) {
+		
+		int index = 0;
+		for (int i = 0; i < gamestate.getPlayer().handSize(); i++) {
+			if (gamestate.getPlayer().hand.get(i).toString().equals(this.toString())) {
+				index = i;
+			}				
 		}
-		gamestate.addToDiscardPile(card); //move to discard pile
-		gamestate.players[gamestate.currentPlayerIndex].removeFromHand(card); //remove played card from hand
-		gamestate.drawStackedCards = false;
-		gamestate.numStackedCards = 0;
+		gamestate.addToDiscardPile(this); //move to discard pile
+		gamestate.players[gamestate.currentPlayerIndex].removeFromHand(index); //remove played card from hand
+	    gamestate.drawStackedCards = false;
+		//gamestate.numStackedCards = 0;
 		gamestate.setNextPlayer();
 	}
 }
