@@ -8,16 +8,18 @@ public class Player {
 	int playerIndex;
 	
 	
+	
 	public Player(int index) {
 		hand = new ArrayList<Card> ();
 		playerIndex = index;
-		//this.playerIndex = playerIndex;
+		
+		
 	}
 	
 	public void initializeHand(GameState gamestate) {
 		for (int i = 0; i < 7; i++) {
 			hand.add(gamestate.getPlayingDeck().get(gamestate.getPlayDeckIndex()));
-			gamestate.removeFromPlayDeck((gamestate.getPlayDeckIndex()));
+			gamestate.removeFromPlayDeck();
 		}
 	}
 	
@@ -35,9 +37,10 @@ public class Player {
 		hand.add(card);
 	}
 	
-	public void removeFromHand(Card card) {
-		hand.remove(card);
+	public void removeFromHand(int index) {
+		hand.remove(hand.get(index));
 	}
+	
 	
 	public boolean isHandEmpty() {
 		return hand.isEmpty();
