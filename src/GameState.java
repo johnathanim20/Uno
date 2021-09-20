@@ -28,6 +28,10 @@ public class GameState {
 		gameEnd = false;
 	}
 	
+	/*
+	 * Converts a String representation of a card into a card or its child object.
+	 */
+	
 	public Card toCard(String card) {
 		Card newCard = null;
 		String color = "";
@@ -79,6 +83,9 @@ public class GameState {
 		buildPlayerArr();
 		currentPlayer = players[0];
 	}
+	/*
+	 * Function used for initializing GUI environment - for testing
+	 */
 	
 	public void setUpForGui() {
 		initializeDeck();
@@ -87,6 +94,10 @@ public class GameState {
 		removeFromPlayDeck();
 		currentColor = getTopCardDiscardPile().getColor();
 	}
+	
+	/*
+	 * Function to detect if a player's hand is empty and the game will end.
+	 */
 	
 	public int hasWon() {
 		for (int i = 0; i < numPlayers; i++) {
@@ -98,10 +109,16 @@ public class GameState {
 		return -1;
 	}
 	
+	/*
+	 * Function to add a card to the current player's hand
+	 */
 	public void drawCard() {
 		 currentPlayer.hand.add(getTopCardPlayingDeck());
 	}
 	 
+	/*
+	 * Function to reset all decks in the gamestate.
+	 */
 	public void clearDecks() {
 		initialDeck.clear();
 		discardPile.clear();
@@ -139,10 +156,18 @@ public class GameState {
 		return playingDeck.get(playDeckIndex);
 	}
 	
+	/*
+	 * Function to remove a card from the play deck's and updates the playdeck index.
+	 */
+	
 	public void removeFromPlayDeck() {
 		playingDeck.remove(playDeckIndex);
 		playDeckIndex--;
 	}
+	
+	/*
+	 * Function to implement the new custom addition rule.
+	 */
 	
 	public void additionRule(ArrayList<Card> hand) {
 		try {
@@ -164,6 +189,9 @@ public class GameState {
 		}
 	}
 	
+	/*
+	 * Function to implement the new custom subtraction rule.
+	 */
 	public void subtractionRule(ArrayList<Card> hand) {
 		try {
 			int value = Integer.parseInt(getTopCardDiscardPile().getValue());
