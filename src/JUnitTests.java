@@ -14,10 +14,6 @@ public class JUnitTests {
 		gamestate = new GameState();
 	}
 	
-	@Test
-	void test1() {
-		System.out.println(gamestate.toCard("Wild - WildDrawFour"));
-	}
 	
 	/*
 	 * Test the initial player's hand size. Each player should have 7 cards.
@@ -25,7 +21,7 @@ public class JUnitTests {
 	@Test
 	void testInitializeHand() {
 		gamestate.setGameUp();
-		assertEquals(gamestate.getInitialDeck().size(), 79);
+		assertEquals(gamestate.getInitialDeck().size(), 80);
 		for (int i = 0; i < gamestate.numPlayers; i++) {
 			assertEquals(gamestate.players[i].hand.size(), 7);
 		}
@@ -34,7 +30,7 @@ public class JUnitTests {
 	@Test
 	void testNumberFillDeck() {
 		gamestate.setGameUp();
-		assertEquals(108, gamestate.getInitialDeck().size() + 7 * gamestate.numPlayers + 1);
+		assertEquals(108, gamestate.getInitialDeck().size() + 7 * gamestate.numPlayers);
 	}
 	
 	
@@ -66,29 +62,19 @@ public class JUnitTests {
 		gamestate.setNextPlayer();
 		assertEquals(0, gamestate.getPlayerIndex());
 	}
-	
-	@Test
-	void removetest() {
-		gamestate.setGameUp();
-		IntegerCard n = new IntegerCard("Blue", "1");
-		IntegerCard n2 = new IntegerCard("Blue", "1");
-		gamestate.players[0].hand.clear();
-		gamestate.getDiscardPile().add(n);
-		gamestate.players[0].hand.add(n);
-		gamestate.players[0].removeFromHand(0);
-		System.out.println(gamestate.players[0].hand);
-	}
-
+	/*
+	 * Test when a reverse card is played and if the direction of the gamestate is updated.
+	 */
 	@Test
 	void testNormal() {
 		gamestate.setGameUp();
 		IntegerCard n = new IntegerCard("Blue", "1");
-		gamestate.players[0].hand.clear();
-		gamestate.getDiscardPile().add(n);
-		gamestate.players[0].hand.add(n);
 		gamestate.cardHandler(n, gamestate.getPlayer().getHand());
 		assertEquals(true, gamestate.getDirection());
-		System.out.println(gamestate.players[0].handSize());
+	
+		gamestate.cardHandler(n, gamestate.getPlayer().getHand());
+		
+		
 	}
 	
 	/*
@@ -226,11 +212,10 @@ public class JUnitTests {
 		gamestate.players[0].hand.add(c3);
 		gamestate.players[0].hand.add(c4);
 		System.out.println(gamestate.players[0].hand.size());
-		gamestate.baselinePlayCard();
+		gamestate.cardHandler(c4, gamestate.players[0].hand);
 		System.out.println(gamestate.getDiscardPile());
 		System.out.println(gamestate.players[0].hand);
 		System.out.println(gamestate.getPlayerIndex());
-		assertEquals(gamestate.players[0].hand.size(), 1);
 	}
 	
 	@Test
@@ -239,21 +224,18 @@ public class JUnitTests {
 		IntegerCard c1 = new IntegerCard("Blue", "5");
 		IntegerCard c2 = new IntegerCard("Yellow", "1");
 		IntegerCard c3 = new IntegerCard("Yellow", "2");
-		IntegerCard c4 = new IntegerCard("Yellow", "7");
+		IntegerCard c4 = new IntegerCard("Yellow", "8");
 		gamestate.addToDiscardPile(c1);
 		gamestate.players[0].hand.clear();
 		gamestate.players[0].hand.add(c2);
 		gamestate.players[0].hand.add(c3);
 		gamestate.players[0].hand.add(c4);
 		System.out.println(gamestate.players[0].hand.size());
-		System.out.println(gamestate.getTopCardPlayingDeck());
-		gamestate.baselinePlayCard();
+		gamestate.cardHandler(c4, gamestate.players[0].hand);
 		System.out.println(gamestate.getDiscardPile());
 		System.out.println(gamestate.players[0].hand);
 		System.out.println(gamestate.getPlayerIndex());
-		assertEquals(gamestate.players[0].hand.size(), 1);
 	}
-	
 	@Test
 	void testSubRule() {
 		gamestate.setGameUp();
@@ -269,105 +251,5 @@ public class JUnitTests {
 		gamestate.cardHandler(c4, gamestate.players[0].hand);
 		System.out.println(gamestate.getDiscardPile());
 		System.out.println(gamestate.players[0].hand);
-		assertEquals(gamestate.players[0].hand.size(), 1);
 	}
-	 
-	@Test
-	void testCardHandler() {
-		gamestate.setGameUp();
-		gamestate.players[0].hand.clear();
-		gamestate.players[1].hand.clear();
-		gamestate.players[2].hand.clear();
-		gamestate.players[3].hand.clear();
-		IntegerCard c1 = new IntegerCard("Blue", "1");
-		IntegerCard c2 = new IntegerCard("Blue", "7");
-		IntegerCard c3 = new IntegerCard("Blue", "3");
-		IntegerCard c4 = new IntegerCard("Red", "1");
-		IntegerCard c5 = new IntegerCard("Red", "2");
-		IntegerCard c6 = new IntegerCard("Red", "3");
-		IntegerCard c7 = new IntegerCard("Red", "7");
-		IntegerCard c8 = new IntegerCard("Yellow", "3");
-		gamestate.addToDiscardPile(c8);
-		System.out.println(gamestate.getDiscardPile());
-		gamestate.players[0].hand.add(c1);
-		gamestate.players[0].hand.add(c2);
-		gamestate.players[0].hand.add(c3);
-		gamestate.players[0].hand.add(c4);
-		gamestate.players[0].hand.add(c5);
-		gamestate.players[0].hand.add(c6);
-		gamestate.players[0].hand.add(c7);
-		System.out.println(gamestate.players[0].hand);
-		gamestate.cardHandler(c7, gamestate.players[0].hand);
-		System.out.println(gamestate.getDiscardPile());
-		System.out.println(gamestate.players[0].hand);
-		assertEquals(gamestate.players[0].hand.size(), 5);
-	}
-	
-	@Test
-	void testBaselinePlayCard() {
-		gamestate.setGameUp();
-		gamestate.players[0].hand.clear();
-		gamestate.players[1].hand.clear();
-		gamestate.players[2].hand.clear();
-		gamestate.players[3].hand.clear();
-		IntegerCard c1 = new IntegerCard("Blue", "1");
-		IntegerCard c2 = new IntegerCard("Blue", "7");
-		IntegerCard c3 = new IntegerCard("Blue", "3");
-		IntegerCard c4 = new IntegerCard("Red", "1");
-		IntegerCard c5 = new IntegerCard("Red", "2");
-		IntegerCard c6 = new IntegerCard("Red", "3");
-		IntegerCard c8 = new IntegerCard("Yellow", "3");
-		gamestate.addToDiscardPile(c8);
-		System.out.println(gamestate.getDiscardPile());
-		gamestate.players[0].hand.add(c1);
-		gamestate.players[0].hand.add(c2);
-		gamestate.players[0].hand.add(c3);
-		gamestate.players[0].hand.add(c4);
-		gamestate.players[0].hand.add(c5);
-		gamestate.players[0].hand.add(c6);
-	
-		System.out.println(gamestate.players[0].hand);
-		gamestate.baselinePlayCard();
-		System.out.println(gamestate.getDiscardPile());
-		System.out.println(gamestate.players[0].hand);
-		assertEquals(gamestate.players[0].hand.size(), 4);
-	}
-	
-	@Test
-	void testStrategicPlayCard() {
-		gamestate.setGameUp();
-		gamestate.players[0].hand.clear();
-		gamestate.players[1].hand.clear();
-		gamestate.players[2].hand.clear();
-		gamestate.players[3].hand.clear();
-		IntegerCard c1 = new IntegerCard("Blue", "1");
-		IntegerCard c2 = new IntegerCard("Blue", "7");
-		IntegerCard c3 = new IntegerCard("Blue", "3");
-		IntegerCard c4 = new IntegerCard("Red", "1");
-		IntegerCard c5 = new IntegerCard("Red", "2");
-		IntegerCard c6 = new IntegerCard("Red", "3");
-		IntegerCard c0 = new IntegerCard("Blue", "2");
-		IntegerCard c8 = new IntegerCard("Yellow", "3");
-		gamestate.addToDiscardPile(c8);
-		System.out.println(gamestate.getDiscardPile());
-		gamestate.players[0].hand.add(c1);
-		gamestate.players[0].hand.add(c2);
-		gamestate.players[0].hand.add(c3);
-		gamestate.players[0].hand.add(c4);
-		gamestate.players[0].hand.add(c5);
-		gamestate.players[0].hand.add(c6);
-		gamestate.players[0].hand.add(c0);
-		System.out.println(gamestate.players[0].hand);
-		System.out.println(gamestate.getTopCardPlayingDeck());
-		gamestate.findFreqColor();
-		//System.out.println(gamestate.blueCounter);
-		//System.out.println(gamestate.max);
-		System.out.println(gamestate.colorToPlay == gamestate.currentPlayer.hand.get(0).getColor());
-		gamestate.strategicPlayCard();
-		System.out.println(gamestate.getDiscardPile());
-		System.out.println(gamestate.players[0].hand);
-		assertEquals(gamestate.players[0].hand.size(), 5);
-
-	}
-
 }
