@@ -7,21 +7,16 @@ public class DrawTwo extends Card {
 	/*
 	 * Updates gamestate instance variables
 	 */
-	public void playCard(GameState gamestate) {
-		if (validMove(null, gamestate)) {
-			int index = 0;
-			
-			for (int i = 0; i < gamestate.getPlayer().handSize(); i++) {
-				if (gamestate.getPlayer().hand.get(i).toString().equals(this.toString())) {
-					index = i;
-				}				
-			}
-			gamestate.addToDiscardPile(this);
-			gamestate.players[gamestate.currentPlayerIndex].removeFromHand(index); 
-			gamestate.setCurrentColor(this.getColor().toString()); 
+	public void playCard(GameState gamestate, Card card) {
+		if (validMove(null, card, gamestate)) {
+			gamestate.addToDiscardPile(card);
+			gamestate.players[gamestate.currentPlayerIndex].removeFromHand(card); 
+			gamestate.setCurrentColor(card.getColor().toString()); 
 			gamestate.numStackedCards += 2;	
 			gamestate.drawStackedCards = true;
 			gamestate.setNextPlayer();
+			gamestate.setNextPlayer();
 		}
 	}
+	
 }
